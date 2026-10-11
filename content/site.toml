@@ -42,6 +42,39 @@ single container on DigitalOcean.
 - **pulldown-cmark** for the Markdown you're reading now
 """
 
+[[project]]
+slug = "vtracker"
+title = "vTracker"
+summary = "A case tracker for background-check investigations, rewritten from Django to Rust to keep its memory footprint tiny."
+status = "active"
+tags = ["rust", "axum", "sqlx", "postgres", "askama"]
+featured = true
+url = "https://vtracker.um9i.dev/"
+body = """
+A Rust rewrite of an earlier Django app for tracking customer background-check
+investigations. It keeps the same data model and routes, but swaps Django and
+SQLite for axum, SQLx and a managed Postgres, and was built to use as little RAM
+as possible: the server idles at around 15 MB RSS.
+
+## Stack
+
+- **axum** on a small hyper accept loop, with server-side sessions in Postgres
+  via `tower-sessions`
+- **SQLx** against a managed Postgres, using `pg_trgm` for search
+- **askama** for compile-time-checked templates
+- **argon2** password hashing on a dedicated thread
+- Release builds tuned for size: `opt-level = "z"`, LTO, stripped, `panic = "abort"`
+
+## Measuring it
+
+A separate benchmark crate starts the server, logs in and load-tests each route.
+It reports throughput, latency percentiles, Postgres round trips per request
+(counted by a wire-protocol proxy) and server memory. Optimizations are measured
+against a deploy-like profile: 1 CPU, an extra 1 ms of database latency and
+20 req/s of open-loop traffic. That matches production, a small App Platform
+container talking to a remote database.
+"""
+
 # Copy this block for each new project:
 #
 # [[project]]
