@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}{{ project.title }} · Um9i.dev{% endblock %}
+{% block description %}{{ project.summary }}{% endblock %}
+
+{% block content %}
+<article class="project">
+  <p class="crumbs"><a href="/projects">&larr; projects</a></p>
+  <header>
+    <h1>{{ project.title }}</h1>
+    <p class="tagline">{{ project.summary }}</p>
+    <div class="meta">
+      <span class="status status-{{ project.status.label() }}">{{ project.status.label() }}</span>
+      {% if let Some(url) = project.url %}<a href="{{ url }}">Visit &nearr;</a>{% endif %}
+      {% if let Some(repo) = project.repo %}<a href="{{ repo }}">Source &nearr;</a>{% endif %}
+    </div>
+    {% if !project.tags.is_empty() %}
+    <ul class="tags" aria-label="Tags">
+      {% for tag in project.tags %}<li>{{ tag }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+  </header>
+  <div class="prose">{{ project.body_html|safe }}</div>
+</article>
+{% endblock %}

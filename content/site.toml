@@ -1,0 +1,58 @@
+# Site content for Um9i.dev.
+#
+# This file is compiled into the binary; edit it and redeploy. `cargo test`
+# validates it (unique, lowercase slugs; known statuses).
+#
+# `about` and each project's `body` are Markdown.
+
+name = "Um9i"
+tagline = "Things I'm building, breaking, and learning from."
+
+about = """
+This is where I keep track of what I'm working on: tools, experiments,
+and the occasional finished thing. Each project has a short write-up and,
+where it makes sense, a link to the code or a live version.
+"""
+
+# Shown on the home page. Add as many as you like.
+# [[links]]
+# label = "GitHub"
+# url = "https://github.com/your-handle"
+
+[[project]]
+slug = "um9i-dev"
+title = "Um9i.dev"
+summary = "This site: a small portfolio server written in Rust with axum."
+status = "active"            # active | shipped | experiment | archived
+tags = ["rust", "axum", "tokio", "askama"]
+featured = true
+url = "https://um9i.dev/"
+# repo = "https://github.com/your-handle/um9i.dev"
+body = """
+A deliberately small web server. Content lives in a TOML file compiled into
+the binary, pages are rendered with [askama](https://github.com/askama-rs/askama)
+templates that are type-checked at build time, and the whole thing ships as a
+single container on DigitalOcean.
+
+## Stack
+
+- **axum** for routing, with `tower-http` for compression, timeouts, tracing
+  and security headers
+- **askama** for compile-time templates
+- **pulldown-cmark** for the Markdown you're reading now
+"""
+
+# Copy this block for each new project:
+#
+# [[project]]
+# slug = "my-project"
+# title = "My Project"
+# summary = "One line shown on cards."
+# status = "experiment"
+# tags = ["rust"]
+# featured = false
+# repo = "https://github.com/..."
+# url = "https://..."
+# body = """
+# Longer Markdown write-up.
+# """

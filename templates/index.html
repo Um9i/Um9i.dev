@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+  <p class="term" aria-hidden="true"><span class="prompt">$</span> whoami</p>
+  <h1>{{ site.name }}</h1>
+  <p class="tagline">{{ site.tagline }}</p>
+  <div class="prose">{{ site.about_html|safe }}</div>
+  {% if !site.links.is_empty() %}
+  <ul class="links">
+    {% for link in site.links %}<li><a href="{{ link.url }}" rel="me">{{ link.label }}</a></li>{% endfor %}
+  </ul>
+  {% endif %}
+</section>
+
+<section aria-labelledby="featured-heading">
+  <div class="section-head">
+    <h2 id="featured-heading">Featured</h2>
+    <a href="/projects">All projects &rarr;</a>
+  </div>
+  {% if featured.is_empty() %}
+  <p class="muted">Nothing featured yet.</p>
+  {% else %}
+  <div class="grid">
+    {% for p in featured %}{% include "_card.html" %}{% endfor %}
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

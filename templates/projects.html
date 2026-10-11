@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Projects · Um9i.dev{% endblock %}
+
+{% block content %}
+<h1>Projects</h1>
+{% if projects.is_empty() %}
+<p class="muted">No projects yet.</p>
+{% else %}
+<div class="grid">
+  {% for p in projects %}{% include "_card.html" %}{% endfor %}
+</div>
+{% endif %}
+{% endblock %}

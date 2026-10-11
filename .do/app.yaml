@@ -1,0 +1,33 @@
+# DigitalOcean App Platform spec.
+#   Create:  doctl apps create --spec .do/app.yaml
+#   Update:  doctl apps update <app-id> --spec .do/app.yaml
+name: um9i-dev
+region: lon
+domains:
+  - domain: um9i.dev
+    type: PRIMARY
+    # Set to the zone name if DigitalOcean manages your DNS; App Platform then
+    # creates the records and issues the TLS certificate automatically.
+    # zone: um9i.dev
+  - domain: www.um9i.dev
+    type: ALIAS
+services:
+  - name: web
+    # TODO: point at your repository before the first deploy.
+    github:
+      repo: your-github-user/um9i.dev
+      branch: main
+      deploy_on_push: true
+    dockerfile_path: Dockerfile
+    http_port: 8080
+    instance_count: 1
+    instance_size_slug: apps-s-1vcpu-0.5gb
+    health_check:
+      http_path: /healthz
+      initial_delay_seconds: 5
+      period_seconds: 10
+    routes:
+      - path: /
+    envs:
+      - key: RUST_LOG
+        value: um9i=info,tower_http=info

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Um9i.dev{% endblock %}</title>
+  <meta name="description" content="{% block description %}Projects and experiments by Um9i.{% endblock %}">
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/css/site.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="/"><span class="prompt">~/</span>Um9i<span class="tld">.dev</span></a>
+      <nav aria-label="Main">
+        <a href="/" {% if nav == "home" %}aria-current="page"{% endif %}>home</a>
+        <a href="/projects" {% if nav == "projects" %}aria-current="page"{% endif %}>projects</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>Um9i.dev</span>
+      <span class="muted">served by axum</span>
+    </div>
+  </footer>
+</body>
+</html>
