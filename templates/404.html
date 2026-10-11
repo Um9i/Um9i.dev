@@ -3,9 +3,13 @@
 {% block title %}Not found · Um9i.dev{% endblock %}
 
 {% block content %}
-<section class="hero">
-  <p class="term"><span class="prompt">$</span> cd here<br>bash: cd: here: No such file or directory</p>
-  <h1>404</h1>
-  <p class="tagline">That page doesn't exist. <a href="/">Head home</a> or <a href="/projects">browse projects</a>.</p>
+<section class="not-found">
+  <p class="eyebrow">404 / Page not found</p>
+  <h1>A wrong turn<span class="accent">.</span></h1>
+  <p class="tagline">That page doesn't exist. Let's get you back to the workbench.</p>
+  <div class="page-actions">
+    <a class="button" href="/">Head home <span aria-hidden="true">&rarr;</span></a>
+    <a href="/projects">Browse projects <span aria-hidden="true">&rarr;</span></a>
+  </div>
 </section>
 {% endblock %}

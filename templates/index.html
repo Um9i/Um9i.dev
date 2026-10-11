@@ -2,21 +2,37 @@
 
 {% block content %}
 <section class="hero">
-  <p class="term" aria-hidden="true"><span class="prompt">$</span> whoami</p>
-  <h1>{{ site.name }}</h1>
-  <p class="tagline">{{ site.tagline }}</p>
-  <div class="prose">{{ site.about_html|safe }}</div>
-  {% if !site.links.is_empty() %}
-  <ul class="links">
-    {% for link in site.links %}<li><a href="{{ link.url }}" rel="me">{{ link.label }}</a></li>{% endfor %}
-  </ul>
-  {% endif %}
+  <div class="hero-copy">
+    <p class="eyebrow"><span class="signal" aria-hidden="true"></span> A personal workbench on the web</p>
+    <h1>{{ site.name }}<span class="hero-dot">.</span><span class="hero-subtitle">Always building<span class="accent">.</span></span></h1>
+    <p class="tagline">{{ site.tagline }}</p>
+    <div class="prose">{{ site.about_html|safe }}</div>
+    <a class="button" href="/projects">Explore the projects <span aria-hidden="true">&rarr;</span></a>
+    {% if !site.links.is_empty() %}
+    <ul class="links">
+      {% for link in site.links %}<li><a href="{{ link.url }}" rel="me">{{ link.label }} <span aria-hidden="true">↗</span></a></li>{% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+  <aside class="terminal" aria-label="About this workbench">
+    <div class="terminal-bar"><span class="terminal-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>um9i / workbench</span><span aria-hidden="true">⌘</span></div>
+    <div class="terminal-body">
+      <p class="term"><span class="prompt">❯</span> cat about.toml</p>
+      <p><span class="code-key">name</span> <span class="code-muted">=</span> <span class="code-string">"{{ site.name }}"</span></p>
+      <p><span class="code-key">focus</span> <span class="code-muted">=</span> <span class="code-string">"build. break. learn."</span></p>
+      <p><span class="code-key">mode</span> <span class="code-muted">=</span> <span class="code-string">"curiosity-driven"</span></p>
+      <div class="terminal-divider"></div>
+      <p class="code-muted"># Small tools. Big rabbit holes.</p>
+      <p class="term terminal-last"><span class="prompt">❯</span> <span class="cursor" aria-hidden="true"></span></p>
+    </div>
+    <div class="terminal-foot"><span><span class="signal" aria-hidden="true"></span> Work in progress</span><span>Rust / axum</span></div>
+  </aside>
 </section>
 
-<section aria-labelledby="featured-heading">
+<section class="featured" aria-labelledby="featured-heading">
   <div class="section-head">
-    <h2 id="featured-heading">Featured</h2>
-    <a href="/projects">All projects &rarr;</a>
+    <div><p class="eyebrow">01 / Selected work</p><h2 id="featured-heading">From the workbench<span class="accent">.</span></h2></div>
+    <a href="/projects">All projects <span aria-hidden="true">&rarr;</span></a>
   </div>
   {% if featured.is_empty() %}
   <p class="muted">Nothing featured yet.</p>

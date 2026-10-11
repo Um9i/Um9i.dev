@@ -3,12 +3,15 @@
 {% block title %}Projects · Um9i.dev{% endblock %}
 
 {% block content %}
-<h1>Projects</h1>
+<header class="page-heading"><p class="eyebrow">The project directory</p><h1>Things in motion<span class="accent">.</span></h1><p class="tagline">Tools, experiments, and the occasional finished thing.</p></header>
 {% if projects.is_empty() %}
 <p class="muted">No projects yet.</p>
 {% else %}
+<section aria-labelledby="directory-heading">
+<div class="directory-head"><h2 id="directory-heading">All projects</h2><span>{{ projects.len() }} {% if projects.len() == 1 %}project{% else %}projects{% endif %}</span></div>
 <div class="grid">
   {% for p in projects %}{% include "_card.html" %}{% endfor %}
 </div>
+</section>
 {% endif %}
 {% endblock %}

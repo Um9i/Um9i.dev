@@ -12,22 +12,22 @@
   <a class="skip" href="#main">Skip to content</a>
   <header class="site-header">
     <div class="wrap">
-      <a class="brand" href="/"><span class="prompt">~/</span>Um9i<span class="tld">.dev</span></a>
+      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">u/</span> Um9i<span class="tld">.dev</span></a>
       <nav aria-label="Main">
-        <a href="/" {% if nav == "home" %}aria-current="page"{% endif %}>home</a>
-        <a href="/projects" {% if nav == "projects" %}aria-current="page"{% endif %}>projects</a>
+        <a href="/" {% if nav == "home" %}aria-current="page"{% endif %}>Home</a>
+        <a href="/projects" {% if nav == "projects" %}aria-current="page"{% endif %}>Projects</a>
       </nav>
     </div>
   </header>
 
-  <main id="main" class="wrap">
+  <main id="main" class="wrap" tabindex="-1">
     {% block content %}{% endblock %}
   </main>
 
   <footer class="site-footer">
     <div class="wrap">
-      <span>Um9i.dev</span>
-      <span class="muted">served by axum</span>
+      <span>Um9i.dev <span class="footer-note">/ Built with curiosity.</span></span>
+      <span class="muted">Made with Rust &amp; axum</span>
     </div>
   </footer>
 </body>
