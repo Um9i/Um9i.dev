@@ -45,34 +45,50 @@ single container on DigitalOcean.
 [[project]]
 slug = "vtracker"
 title = "vTracker"
-summary = "A case tracker for background-check investigations, rewritten from Django to Rust to keep its memory footprint tiny."
+summary = "A case tracker that runs in 5 MB of RAM and serves pages in about 3 ms, even with a million customers."
 status = "active"
 tags = ["rust", "axum", "sqlx", "postgres", "askama"]
 featured = true
 url = "https://vtracker.um9i.dev/"
 body = """
-A Rust rewrite of an earlier Django app for tracking customer background-check
-investigations. It keeps the same data model and routes, but swaps Django and
-SQLite for axum, SQLx and a managed Postgres, and was built to use as little RAM
-as possible: the server idles at around 15 MB RSS.
+vTracker tracks background-check investigations for customers. It started life
+as a Django app. I rewrote it in Rust with one goal: make it as lean as
+possible without losing a single feature. It keeps the same data model and the
+same routes, and needs a fraction of the resources.
 
-## Stack
+## The numbers
+
+- **About 5 MB of RAM**, idle and under load. A 10-minute soak test grew it by
+  52 KB.
+- **About 3 ms median response** on a database seeded with 1 million customers
+  and 2 million investigations, with the 99th percentile under 6 ms on almost
+  every page.
+- **Around 1,200 requests a second** at peak, with response times flat at about
+  3 ms up to 960 req/s. The limit is the database connection pool, not the app,
+  which uses less than a third of one CPU core at that point.
+- **2 to 8 database round trips per page**, because every query has to earn
+  its place.
+
+The response times come from settings built to match production (one CPU, 1 ms
+of extra database latency), not from a 12-core laptop talking to a local
+database.
+
+## How
 
 - **axum** on a small hyper accept loop, with server-side sessions in Postgres
-  via `tower-sessions`
-- **SQLx** against a managed Postgres, using `pg_trgm` for search
-- **askama** for compile-time-checked templates
-- **argon2** password hashing on a dedicated thread
-- Release builds tuned for size: `opt-level = "z"`, LTO, stripped, `panic = "abort"`
+- **SQLx** against a managed Postgres, with `pg_trgm` indexes so search stays
+  fast across a million rows
+- **askama** templates, checked when the code compiles
+- **argon2** password hashing on its own thread, away from the threads that serve pages
+- Release builds squeezed for size: `opt-level = "z"`, LTO, stripped symbols
 
-## Measuring it
+## Proved, not guessed
 
-A separate benchmark crate starts the server, logs in and load-tests each route.
-It reports throughput, latency percentiles, Postgres round trips per request
-(counted by a wire-protocol proxy) and server memory. Optimizations are measured
-against a deploy-like profile: 1 CPU, an extra 1 ms of database latency and
-20 req/s of open-loop traffic. That matches production, a small App Platform
-container talking to a remote database.
+vTracker comes with its own benchmark tool. It starts the server, logs in and
+load-tests every route. It reports latency percentiles, memory, and the exact
+number of Postgres round trips per request, which it counts with a proxy that
+reads the database wire protocol. Every optimization gets a baseline, one
+change and a comparison. If the numbers don't move, the change doesn't ship.
 """
 
 # Copy this block for each new project:
