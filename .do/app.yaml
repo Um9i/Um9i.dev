@@ -13,10 +13,9 @@ domains:
     type: ALIAS
 services:
   - name: web
-    # TODO: point at your repository before the first deploy.
     github:
-      repo: your-github-user/um9i.dev
-      branch: main
+      repo: Um9i/Um9i.dev
+      branch: master
       deploy_on_push: true
     dockerfile_path: Dockerfile
     http_port: 8080

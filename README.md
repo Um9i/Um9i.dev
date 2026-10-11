@@ -45,6 +45,6 @@ docker build -t um9i . && docker run --rm -p 8080:8080 um9i   # test the image
 doctl apps create --spec .do/app.yaml                          # first time
 ```
 
-Set the `github.repo` in [`.do/app.yaml`](.do/app.yaml) first. With
-`deploy_on_push`, every push to `main` redeploys. App Platform terminates TLS
+The spec in [`.do/app.yaml`](.do/app.yaml) mirrors the live app. With
+`deploy_on_push`, every push to `master` redeploys. App Platform terminates TLS
 and issues the certificate for `um9i.dev` once DNS points at the app.

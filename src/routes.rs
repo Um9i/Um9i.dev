@@ -5,9 +5,11 @@ use std::time::Duration;
 
 use askama::Template;
 use axum::Router;
-use axum::extract::{Path as UrlPath, State};
+use axum::extract::{Path as UrlPath, Request, State};
+use axum::http::uri::PathAndQuery;
 use axum::http::{HeaderName, HeaderValue, StatusCode, header};
-use axum::response::{Html, IntoResponse, Response};
+use axum::middleware::{self, Next};
+use axum::response::{Html, IntoResponse, Redirect, Response};
 use axum::routing::get;
 use tower_http::compression::CompressionLayer;
 use tower_http::services::ServeDir;
@@ -41,6 +43,7 @@ pub(crate) fn router(state: AppState, static_dir: &Path) -> Router {
         .nest_service("/static", static_files)
         .fallback(fallback)
         .with_state(state)
+        .layer(middleware::from_fn(redirect_www))
         .layer(security_header(
             header::CONTENT_SECURITY_POLICY,
             CONTENT_SECURITY_POLICY,
@@ -65,6 +68,32 @@ pub(crate) fn router(state: AppState, static_dir: &Path) -> Router {
 
 fn security_header(name: HeaderName, value: &'static str) -> SetResponseHeaderLayer<HeaderValue> {
     SetResponseHeaderLayer::if_not_present(name, HeaderValue::from_static(value))
+}
+
+/// Permanently redirect `www.<host>` to `https://<host>`, keeping the path and
+/// query, so search engines see one canonical address for the site.
+async fn redirect_www(request: Request, next: Next) -> Response {
+    // HTTP/2 carries the host in the URI authority, HTTP/1.1 in the Host header.
+    let host = request.uri().host().or_else(|| {
+        request
+            .headers()
+            .get(header::HOST)
+            .and_then(|value| value.to_str().ok())
+    });
+    let apex = host.and_then(|host| {
+        host.get(..4)
+            .filter(|prefix| prefix.eq_ignore_ascii_case("www."))
+            .map(|_| &host[4..])
+    });
+
+    if let Some(apex) = apex {
+        let path = request
+            .uri()
+            .path_and_query()
+            .map_or("/", PathAndQuery::as_str);
+        return Redirect::permanent(&format!("https://{apex}{path}")).into_response();
+    }
+    next.run(request).await
 }
 
 /// Render an askama template into an HTML response.

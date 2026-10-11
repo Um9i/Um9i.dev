@@ -25,6 +25,18 @@ async fn get(uri: &str) -> axum::response::Response {
         .unwrap()
 }
 
+async fn get_with_host(uri: &str, host: &str) -> axum::response::Response {
+    test_app()
+        .oneshot(
+            Request::get(uri)
+                .header(header::HOST, host)
+                .body(Body::empty())
+                .unwrap(),
+        )
+        .await
+        .unwrap()
+}
+
 async fn body_text(response: axum::response::Response) -> String {
     let bytes = response.into_body().collect().await.unwrap().to_bytes();
     String::from_utf8(bytes.to_vec()).unwrap()
@@ -86,5 +98,34 @@ async fn responses_should_include_content_security_policy() {
         response
             .headers()
             .contains_key(header::CONTENT_SECURITY_POLICY)
+    );
+}
+
+#[tokio::test]
+async fn www_host_should_redirect_permanently() {
+    let response = get_with_host("/", "www.um9i.dev").await;
+    assert_eq!(response.status(), StatusCode::PERMANENT_REDIRECT);
+}
+
+#[tokio::test]
+async fn www_redirect_should_keep_path_and_query() {
+    let response = get_with_host("/projects/um9i-dev?ref=x", "www.um9i.dev").await;
+    assert_eq!(
+        response.headers().get(header::LOCATION).unwrap(),
+        "https://um9i.dev/projects/um9i-dev?ref=x"
+    );
+}
+
+#[tokio::test]
+async fn www_redirect_should_ignore_host_case() {
+    let response = get_with_host("/", "WWW.Um9i.dev").await;
+    assert_eq!(response.status(), StatusCode::PERMANENT_REDIRECT);
+}
+
+#[tokio::test]
+async fn apex_host_should_not_redirect() {
+    assert_eq!(
+        get_with_host("/", "um9i.dev").await.status(),
+        StatusCode::OK
     );
 }
